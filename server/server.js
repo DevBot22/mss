@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json()); // Parses incoming JSON requests
 
 // 🔗 Routes
-app.use('/api/schedule', scheduleRoutes);
+app.use('/api/schedules', scheduleRoutes);
 
 // 🌐 MongoDB Connection
 const connectToDatabase = async () => {

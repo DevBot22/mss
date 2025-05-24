@@ -28,3 +28,51 @@ export const addSchedule = async (req, res, next) => {
     }
 }
 
+export const getSchedule = async (req, res, next) => {
+    try {
+        const schedule = await Schedule.findById(req.params.id)
+
+        if(!schedule){
+            return res.status(404).json({message: 'No schedule found'})
+        }
+
+        res.status(200).json(schedule)
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const updateSchedule = async (req, res, next) => {
+    try {
+        const updatedSchedule = await Schedule.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {new: true}
+        )
+
+        if(!updatedSchedule){
+            return res.status(404).json({message: 'No schedule found!'})
+        }
+
+        res.status(201).json({message: 'Schedule has been updated'})
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteSchedule = async (req, res, next) => {
+    try {
+        const deleteSchedule = await Schedule.findByIdAndDelete(req.params.id)
+
+        if(!deleteSchedule){
+            return res.status(404).json({message: 'No schedule found'})
+        }
+
+        res.status(200).json({message: 'Schedule has been deleted successfuly', deleteSchedule})
+
+    } catch (error) {
+        next(error)
+    }
+}
