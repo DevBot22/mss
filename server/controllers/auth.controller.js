@@ -55,7 +55,7 @@ export const userLogin = async (req, res, next) => {
                     email: user.email,
                     role: user.role
                 }
-            }, {token}
+            },
         )
 
     } catch (error) {
