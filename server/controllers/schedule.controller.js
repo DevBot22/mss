@@ -4,6 +4,11 @@ import Schedule from '../models/schedule.model.js'
 export const getAllSchedules = async (req, res, next) => {
     try {
         const schedules = await Schedule.find().sort({defenseDate : 1})
+
+       if (schedules.length === 0) {
+        return res.status(404).json({ message: "🚫 No schedules found." });
+        }
+        
         return res.status(200).json(schedules)
     } catch (error) {
         next(error)
@@ -72,6 +77,15 @@ export const deleteSchedule = async (req, res, next) => {
 
         res.status(200).json({message: 'Schedule has been deleted successfuly', deleteSchedule})
 
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const deleteAllSchedules = async (req, res, next) => {
+    try {
+        await Schedule.deleteMany({})
+        return res.status(200).json({message: 'All schedules have been delete'})
     } catch (error) {
         next(error)
     }
