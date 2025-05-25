@@ -3,19 +3,23 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import scheduleRoutes from './routes/schedule.route.js';
+import authRoutes from './routes/auth.route.js';
+import userRoutes from './routes/user.route.js';
 
 dotenv.config();
 
 const app = express();
 
-// 🔐 Middleware
+// Middleware
 app.use(cors());
 app.use(express.json()); // Parses incoming JSON requests
 
-// 🔗 Routes
+//  Routes
 app.use('/api/schedules', scheduleRoutes);
+app.use('/api/auth', authRoutes)
+app.use('/api/users', userRoutes)
 
-// 🌐 MongoDB Connection
+// MongoDB Connection
 const connectToDatabase = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
