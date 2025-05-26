@@ -17,12 +17,18 @@ export const getAllSchedules = async (req, res, next) => {
 
 export const addSchedule = async (req, res, next) => {
     try {
-        const {studentName, manuscriptTitle, adviser, panelMembers,
+        const {studentName, section ,manuscriptTitle, adviser, panelMembers,
                defenseDate, room, status
              } = req.body;
 
+          // Check if schedule for this student on this date already exists
+        const existingSchedule = await Schedule.findOne({ studentName, defenseDate });
+         if (existingSchedule) {
+         return res.status(400).json({ message: 'Schedule for this student on this date already exists.' });
+        }
+
         const newSchedule = new Schedule({
-            studentName, manuscriptTitle, adviser, panelMembers,
+            studentName, section, manuscriptTitle, adviser, panelMembers,
                defenseDate, room, status
         })
 

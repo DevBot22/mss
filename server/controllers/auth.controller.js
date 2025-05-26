@@ -18,7 +18,7 @@ export const userSignup = async (req, res, next) => {
         const user = new User({name, email, password: hashedPassword, role})
         await user.save()
         
-        res.status(201).json({message: 'User registered successfully', user})
+        res.status(201).json({message: 'User registered successfully'})
     } catch (error) {
         next(error)
     }

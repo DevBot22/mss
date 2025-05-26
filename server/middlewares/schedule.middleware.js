@@ -20,7 +20,7 @@ export const scheduleValidator = [
 //Middleware to catch validation errors
 export const validateRequest = (req, res, next) => {
     const errors = validationResult(req)
-    if(!errors.isEmpty){
+    if(!errors.isEmpty()){
         return res.status(404).json({errors: errors.array()})
     }
     next()

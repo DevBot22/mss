@@ -36,6 +36,7 @@ const scheduleSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-
+// Compound unique index: studentName + defenseDate must be unique
+scheduleSchema.index({ studentName: 1, defenseDate: 1 }, { unique: true });
 
 export default mongoose.models.Schedule || mongoose.model('Schedule', scheduleSchema);
