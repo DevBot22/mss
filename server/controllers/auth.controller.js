@@ -6,7 +6,7 @@ import User from "../models/user.model.js"
 //User signup
 export const userSignup = async (req, res, next) => {
     try {
-        const {name, email, password, role} = req.body
+        const {name, email, password} = req.body
 
         const existingUser = await User.findOne({email})
 
@@ -15,7 +15,9 @@ export const userSignup = async (req, res, next) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)
-        const user = new User({name, email, password: hashedPassword, role})
+
+        //Default role to user to avoid security failure
+        const user = new User({name, email, password: hashedPassword, role: 'student'})
         await user.save()
         
         res.status(201).json({message: 'User registered successfully'})
