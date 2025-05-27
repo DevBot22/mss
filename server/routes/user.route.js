@@ -1,14 +1,15 @@
 import { Router } from "express";
-import { deleteUser, getUser, getAllUsers } from "../controllers/user.controller.js";
+import { deleteUser, getUser, getAllUsers, updateUser } from "../controllers/user.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
-import { authorizeRoles } from "../middlewares/role.middleware.js";
+import { authorizeRoles, validateRequest, validateUpdateRoleOnly } from "../middlewares/role.middleware.js";
 
 const userRoutes = Router()
 
+//This route is for admin only
 userRoutes.get('/', protect, authorizeRoles('admin'), getAllUsers)
 userRoutes.get('/:id', getUser)
 userRoutes.delete('/delete-user/:id', protect, authorizeRoles('admin'), deleteUser)
-
+userRoutes.put('/update-user/:id', protect, validateUpdateRoleOnly, validateRequest, authorizeRoles('admin'), updateUser )
 
 
 export default userRoutes

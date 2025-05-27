@@ -16,7 +16,7 @@ export const userSignup = async (req, res, next) => {
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        //Default role to user to avoid security failure
+        //Default 'student' role to user to avoid security failure
         const user = new User({name, email, password: hashedPassword, role: 'student'})
         await user.save()
         
