@@ -17,18 +17,21 @@ export const getAllSchedules = async (req, res, next) => {
 
 export const addSchedule = async (req, res, next) => {
     try {
-        const {studentName, section ,manuscriptTitle, adviser, panelMembers,
+        const { section ,manuscriptTitle, adviser, panelMembers,
                defenseDate, room, status
              } = req.body;
 
+        const studentName = req.user.name //from token
+        const studentId = req.user._id || req.user.id
+
           // Check if schedule for this student on this date already exists
-        const existingSchedule = await Schedule.findOne({ studentName, defenseDate });
+        const existingSchedule = await Schedule.findOne({ studentId, defenseDate });
          if (existingSchedule) {
          return res.status(400).json({ message: 'Schedule for this student on this date already exists.' });
         }
 
         const newSchedule = new Schedule({
-            studentName, section, manuscriptTitle, adviser, panelMembers,
+           studentId ,studentName, section, manuscriptTitle, adviser, panelMembers,
                defenseDate, room, status
         })
 
@@ -92,6 +95,21 @@ export const deleteAllSchedules = async (req, res, next) => {
     try {
         await Schedule.deleteMany({})
         return res.status(200).json({message: 'All schedules have been delete'})
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getMySchedules = async (req, res, next) => {
+    try {
+        const studentId = req.user._id // from decoded token
+        const mySchedules = await Schedule.find({studentId})
+
+        if(!mySchedules) {
+            return res.status(404).json({message: 'No schedule found'})
+        }
+
+        res.status(200).json(mySchedules)
     } catch (error) {
         next(error)
     }

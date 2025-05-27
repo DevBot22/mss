@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const scheduleSchema = new mongoose.Schema({
+  studentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   studentName: {
     type: String,
     required: true,
