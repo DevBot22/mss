@@ -147,3 +147,28 @@ export const updateMySchedule = async (req, res, next) => {
         next(error)
     }
 }
+
+export const deleteMySchedule = async (req, res, next) => {
+    try {
+
+        const studentId = req.user._id
+        const scheduleId = user.params.id
+
+        //Find schedule
+        const schedule = await Schedule.findOne({_id: scheduleId, studentId})
+
+        if(!schedule){
+            return res.status(404).json({message: 'Schedule not found'})
+        }
+
+        if (schedule.status === 'approved') {
+        return res.status(403).json({ message: 'Cannot delete an approved schedule ❌' });
+        }
+
+
+        await Schedule.findByIdAndDelete(scheduleId)
+          return res.status(200).json({ message: '✅ Your schedule has been deleted successfully' });
+    } catch (error) {
+        next(error)
+    }
+}

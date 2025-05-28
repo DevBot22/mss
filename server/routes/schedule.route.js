@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addSchedule, deleteAllSchedules, deleteSchedule, getAllSchedules, getMySchedules, getSchedule, updateMySchedule, updateSchedule } from "../controllers/schedule.controller.js";
+import { addSchedule, deleteAllSchedules, deleteMySchedule, deleteSchedule, getAllSchedules, getMySchedules, getSchedule, updateMySchedule, updateSchedule } from "../controllers/schedule.controller.js";
 import { scheduleValidator, validateRequest, validateUpdateStatusOnly } from "../middlewares/schedule.middleware.js";
 import { protect } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
@@ -8,6 +8,7 @@ const scheduleRoutes = Router()
 
 scheduleRoutes.get('/my-schedules', protect, authorizeRoles('student'), getMySchedules);
 scheduleRoutes.put('/my-schedules/:id', protect, authorizeRoles('student'), scheduleValidator, validateRequest, updateMySchedule);
+scheduleRoutes.delete('/my-schedules/:id', protect, authorizeRoles('student'), deleteMySchedule)
 
 scheduleRoutes.post('/new-schedule', protect, authorizeRoles('student'), scheduleValidator, validateRequest, addSchedule);
 
