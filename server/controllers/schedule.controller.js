@@ -105,11 +105,44 @@ export const getMySchedules = async (req, res, next) => {
         const studentId = req.user._id // from decoded token
         const mySchedules = await Schedule.find({studentId})
 
-        if(!mySchedules) {
-            return res.status(404).json({message: 'No schedule found'})
+        if (mySchedules.length === 0) {
+          return res.status(404).json({ message: 'No schedule found' });
         }
 
         res.status(200).json(mySchedules)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const updateMySchedule = async (req, res, next) => {
+    try {
+        
+        const studentId = req.user._id
+        const scheduleId = req.params.id
+        
+        //Find schedule 
+        const schedule = await Schedule.findOne({_id : scheduleId, studentId})
+
+        if(!schedule){
+            return res.status(404).json({message: 'Schedule not found'})
+        }
+
+        if(schedule.status !== 'pending'){
+            return res.status(400).json({message: 'Only pending schedules can be edited'})
+        }
+
+        const fieldsToUpdate = req.body
+
+        const updated = await Schedule.findByIdAndUpdate(scheduleId, fieldsToUpdate, 
+            {new: true}
+        )
+
+        res.status(200).json({
+            message: 'Schedule updated successfully',
+            updated
+        })
+
     } catch (error) {
         next(error)
     }
