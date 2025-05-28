@@ -39,6 +39,26 @@ const scheduleSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
   },
+    adviserStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending',
+  },
+  panelStatus: [
+    {
+      name: String, // panel member's name
+      status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending',
+      }
+    }
+  ],
+  finalStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  }
 }, { timestamps: true });
 
 // Compound unique index: studentName + defenseDate must be unique

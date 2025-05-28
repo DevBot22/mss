@@ -172,3 +172,21 @@ export const deleteMySchedule = async (req, res, next) => {
         next(error)
     }
 }
+
+//The following controller is for asdviser only
+export const getAdviserSchedules = async (req, res, next) => {
+    try {
+        
+        const adviserName = req.user.name
+        const schedules = await Schedule.find({adviser: adviserName}).sort({defenseDate: 1})
+
+        if(schedules.length === 0){
+            return res.status(404).json({message: "No Schedules assign to you"})
+        }
+
+        res.status(200).json(schedules)
+
+    } catch (error) {
+        next(error)
+    }
+}
