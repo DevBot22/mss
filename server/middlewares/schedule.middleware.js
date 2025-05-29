@@ -34,3 +34,12 @@ export const validateUpdateStatusOnly = [
     .isIn(['pending', 'approved', 'rejected'])
     .withMessage('Status must be either pending, approved, or rejected'),
 ];
+
+//Middleware Validator for  updating adviser status only
+export const validateUpdateAdviserStatusOnly = [
+  check('status')
+    .notEmpty()
+    .withMessage('Status is required')
+    .isIn(['approved', 'rejected'])
+    .withMessage('Status must be either approved, or rejected'),
+];

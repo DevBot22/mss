@@ -190,3 +190,46 @@ export const getAdviserSchedules = async (req, res, next) => {
         next(error)
     }
 }
+
+export const updateAdviserScheduleStatus = async (req, res, next) => {
+    try {
+        const {id} = req.params
+        const {status} = req.body
+        const adviserName = req.user.name
+        if(!['approved', 'rejected'].includes(status)){
+            return res.status(400).json({message: 'Status must be approved or rejected'})
+        }
+
+        const schedule = await Schedule.findOne({_id: id, adviser: adviserName})
+        if(!schedule){
+            return res.status(404).json({message: 'Schedule not found or not assigned'})
+        }
+
+        //Only updates adviserStatus
+        schedule.adviserStatus = status
+
+        await schedule.save()
+        res.status(200).json({message: `Schedule ${status} by adviser`})
+    } catch (error) {
+        next(error)
+    }
+}
+
+//The following controller is for panel member only
+export const getPanelSchedules = async (req, res, next) => {
+    try {
+        const panelName = req.user.name
+
+        const schedules = await Schedule.findOne({
+            'panelStatus.name': panelName
+        })
+        if(!schedules || schedules.length === 0){
+            return res.status(400).json({message: 'No schedules assigned to you'})
+        }
+
+        res.status(200).json(schedules)
+
+    } catch (error) {
+        next(error)
+    }
+}

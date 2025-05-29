@@ -54,11 +54,6 @@ const scheduleSchema = new mongoose.Schema({
       }
     }
   ],
-  finalStatus: {
-    type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
-  }
 }, { timestamps: true });
 
 // Compound unique index: studentName + defenseDate must be unique
