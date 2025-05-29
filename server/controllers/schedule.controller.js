@@ -32,7 +32,8 @@ export const addSchedule = async (req, res, next) => {
 
         const newSchedule = new Schedule({
            studentId ,studentName, section, manuscriptTitle, adviser, panelMembers,
-               defenseDate, room, status
+               defenseDate, room, status,
+               panelStatus: panelMembers.map(name => ({name, status: 'pending'}))//automatic populate panel's status to pending
         })
 
         await newSchedule.save()
@@ -232,4 +233,33 @@ export const getPanelSchedules = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+}
+
+
+export const updatePanelScheduleStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const { status } = req.body
+    const panelName = req.user.name
+
+    // Find the schedule
+    const schedule = await Schedule.findById(id)
+    if (!schedule) {
+      return res.status(404).json({ message: 'Schedule not found' })
+    }
+
+    // Find the panel member in the schedule
+    const panel = schedule.panelStatus.find(p => p.name === panelName)
+    if (!panel) {
+      return res.status(403).json({ message: 'You are not assigned as a panel on this schedule' })
+    }
+
+    // Update status
+    panel.status = status
+    await schedule.save()
+
+    res.status(200).json({ message: `Panel status updated to ${status}` })
+  } catch (error) {
+    next(error)
+  }
 }

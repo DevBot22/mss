@@ -43,3 +43,12 @@ export const validateUpdateAdviserStatusOnly = [
     .isIn(['approved', 'rejected'])
     .withMessage('Status must be either approved, or rejected'),
 ];
+
+//Middleware for validating panelStatus only
+export const validatePanelStatusOnly = [
+  check('status')
+  .notEmpty()
+  .withMessage('Status is required')
+  .isIn(['approved', 'rejected'])
+  .withMessage('Status must be approved or rejected')
+]

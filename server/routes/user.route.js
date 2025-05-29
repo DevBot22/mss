@@ -9,7 +9,7 @@ const userRoutes = Router()
 userRoutes.get('/', protect, authorizeRoles('admin'), getAllUsers)
 userRoutes.get('/:id', getUser)
 userRoutes.delete('/delete-user/:id', protect, authorizeRoles('admin'), deleteUser)
-userRoutes.put('/update-user/:id', protect, validateUpdateRoleOnly, validateRequest, authorizeRoles('admin'), updateUser )
+userRoutes.patch('/update-user/:id', protect, validateUpdateRoleOnly, validateRequest, authorizeRoles('admin'), updateUser )
 
 
 export default userRoutes
