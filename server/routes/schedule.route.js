@@ -6,10 +6,10 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 const scheduleRoutes = Router()
 
+//Student routes only
 scheduleRoutes.get('/my-schedules', protect, authorizeRoles('student'), getMySchedules);
 scheduleRoutes.patch('/my-schedules/:id', protect, authorizeRoles('student'), scheduleValidator, validateRequest, updateMySchedule);
 scheduleRoutes.delete('/my-schedules/:id', protect, authorizeRoles('student'), deleteMySchedule)
-
 scheduleRoutes.post('/new-schedule', protect, authorizeRoles('student'), scheduleValidator, validateRequest, addSchedule);
 
 //Adviser routes only
@@ -21,6 +21,7 @@ scheduleRoutes.get('/panel/schedules', protect, authorizeRoles('panel'), getPane
 scheduleRoutes.patch('/panel/schedules/update-status/:id', protect, authorizeRoles('panel'), validatePanelStatusOnly, validateRequest, updatePanelScheduleStatus)
 
 //Admin routes only
+scheduleRoutes.post('/admin/add-schedule', protect, authorizeRoles('admin'), )
 scheduleRoutes.put('/update-schedule/:id', protect, authorizeRoles('admin'), validateUpdateStatusOnly, updateSchedule);
 scheduleRoutes.delete('/delete-schedule/:id', protect, authorizeRoles('admin'), deleteSchedule);
 scheduleRoutes.delete('/empty-schedules', protect, authorizeRoles('admin'), deleteAllSchedules);
