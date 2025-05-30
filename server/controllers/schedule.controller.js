@@ -1,4 +1,5 @@
-
+import { sendEmail } from '../utils/send.email.js';
+import User from '../models/user.model.js';
 import Schedule from '../models/schedule.model.js'
 
 export const getAllSchedules = async (req, res, next) => {
@@ -58,24 +59,44 @@ export const getSchedule = async (req, res, next) => {
     }
 }
 
+
 export const updateSchedule = async (req, res, next) => {
-    try {
-        const updatedSchedule = await Schedule.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            {new: true}
-        )
+  try {
+    const { status } = req.body;
+    const scheduleId = req.params.id;
 
-        if(!updatedSchedule){
-            return res.status(404).json({message: 'No schedule found!'})
-        }
-
-        res.status(201).json({message: 'Schedule has been updated'})
-
-    } catch (error) {
-        next(error)
+    const updatedSchedule = await Schedule.findByIdAndUpdate(scheduleId, req.body, { new: true });
+    if (!updatedSchedule) {
+      return res.status(404).json({ message: 'No schedule found!' });
     }
-}
+
+    // Send notification only if schedule is approved
+    if (status === 'approved') {
+      const { adviser, panelMembers, studentId, defenseDate } = updatedSchedule;
+
+      const student = await User.findById(studentId);
+      const adviserUser = await User.findOne({ name: adviser });
+      const panelUsers = await User.find({ name: { $in: panelMembers } });
+
+      const emails = [
+        student?.email,
+        adviserUser?.email,
+        ...panelUsers.map(user => user.email)
+      ].filter(Boolean); // Remove null/undefined
+
+      const subject = 'Defense Schedule Approved';
+      const message = `A manuscript defense schedule has been approved for ${defenseDate}. Please check your account for details.`;
+
+      for (const email of emails) {
+        await sendEmail(email, subject, message);
+      }
+    }
+
+    res.status(201).json({ message: 'Schedule has been updated' });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const deleteSchedule = async (req, res, next) => {
     try {
