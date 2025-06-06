@@ -16,7 +16,7 @@ app.use(express.json()); // Parses incoming JSON requests
 
 //  Routes
 app.use('/api/schedules', scheduleRoutes);
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes)  
 app.use('/api/users', userRoutes)
 
 // MongoDB Connection
